@@ -38,11 +38,10 @@ void Keyboard::playAlong(Recording rec) {
     int i = 0;
     std::vector<Note*> notes = rec.getNotes();
     while (i < notes.size()) {
-        notes[i]->display();
-        char n = getch();
-        if (n == 27) return;
-        if (notes[i]->getName() == 'r') notes[i]->play();
-        else {
+        if (notes[i]->getName() != 'r') {
+            notes[i]->display();
+            char n = getch();
+            if (n == 27) return;
             while (notes[i]->getName() != mapKeys.find(n)->second) n = getch();
             notes[i]->play();
         }
