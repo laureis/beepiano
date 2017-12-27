@@ -1,7 +1,3 @@
-//
-// Created by L on 19/12/2017.
-//
-
 #include "../include/Rest.h"
 #include <windows.h>
 

@@ -1,7 +1,3 @@
-//
-// Created by L on 19/12/2017.
-//
-
 #ifndef BEEPIANO_BEEPIANO_H
 #define BEEPIANO_BEEPIANO_H
 
@@ -10,6 +6,14 @@
 #include "Menu.h"
 
 class Beepiano {
+
+
+/* MAIN CLASS
+ * a keyboard - to play freely or play along
+ * a recorder - to record and save songs
+ * 3 menus
+ * a menu page tracker
+ */
 
 private:
 
@@ -37,11 +41,28 @@ public:
     void setRec(const Recorder &m_rec);
     void setCurrentPage(int m_currentPage);
 
-    // app initialization
-    void logo();
+
+    /* Application initialization
+     * creation of the 3 menus and the choices
+     * creation of the keyboard
+     * creation of the recorder
+     */
     void init();
+
+    /* Application
+     * the only method called in the main
+     * initialized the app
+     * displays the piano and the menu
+     * the user navigates in the menus and can play the piano, record songs, listen to it
+     */
     void start();
+
+    // Jingle played when the app starts
     void jingle();
+
+    // Displays app logo
+    void logo();
+
 
     // menus controllers
     void mainMenuController(char);

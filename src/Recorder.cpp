@@ -1,7 +1,3 @@
-//
-// Created by L on 19/12/2017.
-//
-
 #include <conio.h>
 #include <ctime>
 #include "../include/Recorder.h"
@@ -21,29 +17,29 @@ void Recorder::init() {
     std::vector<std::string> fileList = getFileList("../Recordings");
     for (int i = 0; i<fileList.size(); i++) {
         Recording *r  = new Recording(fileList[i].substr(4, (fileList[i].length()-4)-4), "../Recordings/"+fileList[i]);
-        r->setNotes(r->fileToVector());
+        r->fileToVector();
         m_recList.push_back(*r);
     }
 
     std::vector<std::string> songsList = getFileList("../Recordings/PlayAlong");
     for (int i = 0; i<songsList.size(); i++) {
         Recording *r  = new Recording(songsList[i].substr(4, (songsList[i].length()-4)-4), "../Recordings/PlayAlong/"+songsList[i]);
-        r->setNotes(r->fileToVector());
+        r->fileToVector();
         m_appSongs.push_back(*r);
     }
 }
 
 void Recorder::play() {
     displayFileList();returnLine();
-    std::string choice;
-    center(); print("Set the number of the recording you want to listen to and press enter : ");
-    getline(std::cin,choice); print("\r");
-    while ((atoi(choice.c_str()) < 1) || (atoi(choice.c_str()) > m_recList.size())) {
-        center(); print("Set the number of the recording you want to listen to and press enter : ");
-        getline(std::cin,choice); print("\r");
+    char choice;
+    try {
+        choice = selectChoice('1', intToChar(m_recList.size()), true);
     }
+    catch (int t){
+    }
+    if (choice==27) return;
     drawPiano();
-    m_recList[atoi(choice.c_str())-1].play();
+    m_recList[charToInt(choice)-1].play();
 }
 
 void Recorder::displayFileList() {
@@ -79,9 +75,9 @@ void Recorder::record() {
     center();
     std::vector<Note*> partition;
     print("Set the name of your new recording and press enter to start recording : ");
-    std::string s;
-    getline(std::cin, s);
-    Recording *r = new Recording(s, "../Recordings/rec_"+s+".txt");
+    std::string s = "";
+    while (s.empty()) getline(std::cin, s);
+    Recording *r = new Recording(existingRecordingName(s), "../Recordings/rec_"+existingRecordingName(s)+".txt");
     recordInstructions();
     drawPiano();
     displayOctave();
@@ -92,17 +88,17 @@ void Recorder::record() {
         char c_note = getch();
         int press = clock();
         int time_diff = (press-start)/double(CLOCKS_PER_SEC)*1000;
-        if (time_diff > (60000/r->getTempo())) {
+        if (time_diff > (120000/r->getTempo())) {
             Rest *rest;
-            if (time_diff/(60000/r->getTempo())) rest = new Rest(9, time_diff);
-            else rest = new Rest(time_diff/(60000/r->getTempo()), time_diff);
+            if (time_diff/(120000/r->getTempo()) > 9) rest = new Rest(9, time_diff);
+            else rest = new Rest(time_diff/(120000/r->getTempo()), time_diff);
             partition.push_back(rest);
         }
         if (c_note == 27) play = false;
         if (c_note == 'x') changeOctave(1);
         if (c_note == 'w') changeOctave(0);
         if (mapKeys.find(c_note)!=mapKeys.end()) {
-            note = new Note(mapKeys.find(c_note)->second, getOctave(), 1);
+            note = new Note(mapKeys.find(c_note)->second, getOctave(), 2, 60000/r->getTempo());
             note->display();
             note->play();
             partition.push_back(note);
@@ -111,6 +107,16 @@ void Recorder::record() {
     r->setNotes(partition);
     r->save();
     m_recList.push_back(*r);
+}
+
+
+std::string Recorder::existingRecordingName(std::string rec) {
+
+    std::string newname = rec;
+    for (int i = 0; i< m_recList.size(); i++) {
+        if (rec == m_recList[i].getName()) newname+="_newversion";
+    }
+    return newname;
 }
 
 void Recorder::setRecList(const std::vector<Recording> &m_recList) {

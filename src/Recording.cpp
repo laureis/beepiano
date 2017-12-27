@@ -1,7 +1,3 @@
-//
-// Created by L on 19/12/2017.
-//
-
 #include <fstream>
 #include "../include/Recording.h"
 #include "../include/Rest.h"
@@ -22,7 +18,7 @@ void Recording::setTempo(int tempo) { m_tempo = tempo; }
 void Recording::setPath(std::string path) { m_path = path; }
 void Recording::setNotes(const std::vector<Note*> &notes) { m_notes = notes; }
 
-std::vector<Note*> Recording::fileToVector() {
+void Recording::fileToVector() {
 
     std::vector<Note*> rec;
     std::fstream file;
@@ -41,21 +37,20 @@ std::vector<Note*> Recording::fileToVector() {
         else setTempo(atoi(tmp.c_str()));
         while (!file.eof()) {
             getline(file, tmp);
-            if (tmp[0] == 'r') {
-                Rest *r = new Rest(charToInt(tmp[2]), (60000/m_tempo)*charToInt(tmp[2]));
+            if ((tmp[0] == 'r') && (isInRange(tmp[1]) && (isValue(tmp[2])))) {
+                Rest *r = new Rest(charToInt(tmp[2]), (120000/m_tempo)/charToInt(tmp[2]));
                 rec.push_back(r);
             }
             else {
-                if (isNote(tmp[0])) {
-                    Note *n = new Note(tmp[0], charToInt(tmp[1]), charToInt(tmp[2]),
-                                       (60000 / m_tempo) * charToInt(tmp[2]));
+                if ((isNote(tmp[0])) && (isInRange(tmp[1]) && (isValue(tmp[2])))) {
+                    Note *n = new Note(tmp[0], charToInt(tmp[1]), charToInt(tmp[2]),(120000/m_tempo)/charToInt(tmp[2]));
                     rec.push_back(n);
                 }
             }
         }
         file.close();
     }
-    return rec;
+    m_notes = rec;
 }
 
 bool Recording::save() {

@@ -1,5 +1,5 @@
 //
-// Created by L on 19/12/2017.
+// THIS FILE CONTAINS ALL THE METHODS THAT CAN BE USEFUL TO ANY CLASS
 //
 
 #ifndef BEEPIANO_UTILITIES_H
@@ -11,10 +11,19 @@
 #include <map>
 #include <conio.h>
 
-// MAP NOTES
-// If we can access to the frequency of a note with the map
-// do | c, do# | C, re | d, re# | D, mi | e, fa | f, fa# | F, sol | g, sol# | G, la | a, la# | A, si | b
+// converts a number between 0 and 9 from char type to int type
+static int charToInt(char c) {
+    int e = 1 - '1';
+    return c + e;
+}
 
+// converts a number between 0 and 9 from int type to char type
+static char intToChar(int i) {
+    int e = '1' - 1;
+    return i + e;
+}
+
+// returns true if a char is a note false if note
 static bool isNote(char n) {
 
     char notes[12] = { 'c', 'C', 'd', 'D', 'e', 'f', 'F', 'g', 'G', 'a', 'A', 'b' };
@@ -24,6 +33,9 @@ static bool isNote(char n) {
     return false;
 }
 
+/* map storing the notes frequencies
+ * eg : if we want to get the C note frequency --> mapNotes['C']
+ */
 static std::map<char, double> createMapNotes() {
 
     std::map<char, double> mapNotes;
@@ -37,11 +49,11 @@ static std::map<char, double> createMapNotes() {
     return mapNotes;
 }
 
-
 static std::map<char,double> mapNotes = createMapNotes();
 
-// LINKING THE KEYS TO THE NOTES
-
+/* Map that links the computer's keyboard keys to the note
+ * used when the playerd hits a key, so we know which note he wants to play
+ */
 static std::map<char, char> createMapKeys() {
 
     std::map<char, char> mapKeys;
@@ -61,8 +73,9 @@ static std::map<char, char> createMapKeys() {
 }
 static std::map<char, char> mapKeys = createMapKeys();
 
-// POSITION ON KEYBOARD
-
+/* Note position on the keyboard
+ * used when we display the notes
+ */
 static std::map<char, int> createMapPosition() {
 
     std::map<char, int> mapKeys;
@@ -77,17 +90,21 @@ static std::map<char, int> createMapPosition() {
 }
 static std::map<char, int> mapPosition = createMapPosition();
 
-
+// widthRange used for displaying the piano
 static int widthRange = 28;
 
-static int charToInt(char c) {
-    int e = 1 - '1';
-    return c + e;
+static bool isValue(char v) {
+
+    char values[4] = { '1', '2', '4', '8' };
+    for (int i = 0; i < 4; i ++) {
+        if (v == values[i]) return true;
+    }
+    return false;
 }
 
-static char intToChar(int i) {
-    int e = '1' - 1;
-    return i + e;
+static bool isInRange(char r) {
+
+    return (r >= '0') && (r <= '2');
 }
 
 template<typename Type>
@@ -102,7 +119,6 @@ static Type scan(Type s) {
 }
 
 static void returnLine() {
-
     std::cout << std::endl;
 }
 
@@ -135,32 +151,6 @@ static void drawPiano() {
     center(); print("|  #z# #e#  |  #t# #y# #u#  |  #z# #e#  |  #t# #y# #u#  |  #z# #e#  |  #t# #y# #u#  |");returnLine();
     center(); print("|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |");returnLine();
     center(); print("| q | s | d | f | g | h | j | q | s | d | f | g | h | j | q | s | d | f | g | h | j |");returnLine();
-}
-
-
-static std::vector<std::string> getFileList(const char* sdir) {
-    std::vector<std::string> fileList;
-    DIR *dir;
-    struct dirent *ent;
-    if ((dir = opendir (sdir)) != NULL) {
-        while ((ent = readdir (dir)) != NULL) {
-            std::string str = ent->d_name;
-            if (str.find("rec")!=std::string::npos) fileList.push_back(str);
-        }
-        closedir (dir);
-    }
-    return fileList;
-}
-
-
-static char selectChoice(char min, char max, bool esc) {
-
-    char choice = getch();
-    if ((choice == 27) && (esc)) return choice;
-    if ((choice < min) || (choice > max)) {
-        throw int(1);
-    }
-    else return choice;
 }
 
 static void drawNote(int type) {
@@ -196,5 +186,37 @@ static void drawNote(int type) {
         center(); print("`;;;;'            `;;;;'");returnLine();
     }
 }
+
+/* get into a directory and get the files
+ * containing 'rec' in their names
+ */
+static std::vector<std::string> getFileList(const char* sdir) {
+    std::vector<std::string> fileList;
+    DIR *dir;
+    struct dirent *ent;
+    if ((dir = opendir (sdir)) != NULL) {
+        while ((ent = readdir (dir)) != NULL) {
+            std::string str = ent->d_name;
+            if (str.find("rec")!=std::string::npos) fileList.push_back(str);
+        }
+        closedir (dir);
+    }
+    return fileList;
+}
+
+/* makes sure that the users chooses a number between min and max
+ * or esc (to quit)
+ */
+static char selectChoice(char min, char max, bool esc) {
+
+    char choice = getch();
+    if ((choice == 27) && (esc)) return choice;
+    if ((choice < min) || (choice > max)) {
+        throw int(1);
+    }
+    else return choice;
+}
+
+
 
 #endif //BEEPIANO_UTILITIES_H

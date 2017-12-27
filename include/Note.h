@@ -1,12 +1,13 @@
-//
-// Created by L on 19/12/2017.
-//
-
 #ifndef BEEPIANO_NOTE_H
 #define BEEPIANO_NOTE_H
 
 
 class Note {
+
+/* the note has a frequency, a range(octave), value(whole, half, quarter...) and a duration
+ * the frequence depends on the range and the duration on the value
+ * all the frequences are in Utilities.h
+ */
 
 private:
     char m_name;
@@ -20,7 +21,6 @@ public:
     //constructor
     Note();
     Note(char m_name, int range, int m_value, double duration);
-    Note(char m_name, int range, int m_value);
 
     // destructor
     virtual ~Note();
@@ -39,10 +39,11 @@ public:
     void setValue(int);
     void setDuration(long int);
 
-    //methods
+    // Calls the Beep() function that makes the sound depending on the note frequency
     virtual void play();
+
+    // displays a note
     void display();
-    void frequencyFromOctave(int);
 
 };
 

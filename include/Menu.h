@@ -1,7 +1,3 @@
-//
-// Created by L on 19/12/2017.
-//
-
 #ifndef BEEPIANO_MENU_H
 #define BEEPIANO_MENU_H
 
@@ -9,6 +5,11 @@
 #include <vector>
 
 class Menu {
+
+    /* a menu has a title and choices
+     * it organizes the app so the user know what he can do with the application
+     * and until it stops running
+     */
 
     private:
         std::string m_title;
@@ -30,7 +31,7 @@ class Menu {
         void setTitle(std::string);
         void setChoices(const std::vector<std::string> &m_choices);tChoice();
 
-        // Instructions
+        // display the choices
         void display();
 
 };

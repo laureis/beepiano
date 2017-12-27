@@ -1,7 +1,3 @@
-//
-// Created by L on 19/12/2017.
-//
-
 #include <conio.h>
 #include <afxres.h>
 #include "../include/Beepiano.h"
@@ -46,30 +42,26 @@ void Beepiano::logo() {
 void Beepiano::init() {
     m_currentPage = 0;
 
-    // INITALISATION DU MENU PRINCIPAL
     std::vector<std::string> choices;
     choices.push_back("play the piano");
     choices.push_back("view recordings");
     Menu mainMenu = Menu("MAIN MENU", choices);
     m_menus.push_back(mainMenu);
 
-    // MENU PIANO
     std::vector<std::string> choices2;
     choices2.push_back("play freely");
     choices2.push_back("play along");
     Menu pianoMenu = Menu("PLAY", choices2);
     m_menus.push_back(pianoMenu);
 
-    // MENU RECORDINGS
     std::vector<std::string> choices3;
     choices3.push_back("create a new recording");
     choices3.push_back("listen to your recordings");
     Menu recMenu = Menu("RECORD", choices3);
     m_menus.push_back(recMenu);
 
-    // INITIALISATION DU PIANO
     m_piano = Keyboard(1);
-    // INITIALISAITION DES ENREGISTREMENTS
+
     m_rec = Recorder(1);
     m_rec.init();
 }

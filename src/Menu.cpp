@@ -1,7 +1,3 @@
-//
-// Created by L on 19/12/2017.
-//
-
 #include "../include/Menu.h"
 #include "../include/Utilities.h"
 

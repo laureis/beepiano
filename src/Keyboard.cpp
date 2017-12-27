@@ -1,28 +1,16 @@
-//
-// Created by L on 19/12/2017.
-//
-
 #include <conio.h>
 #include "../include/Keyboard.h"
 #include "../include/Utilities.h"
 
-// CONSTRUCTORS
 Keyboard::Keyboard(int m_octave) : m_octave(m_octave) {}
 Keyboard::Keyboard() {}
 
-// DESTRUCTOR
 Keyboard::~Keyboard() {}
 
-// GETTERS
 int Keyboard::getOctave() const { return m_octave; }
 
-// SETTERS
 void Keyboard::setOctave(const int octave) { m_octave = octave; }
 
-/* PLAY FREELY METHOD
- * interaction with the keyboard
- * the user presses a key and a note is played
- */
 void Keyboard::play() {
 
     playInstructions();
@@ -35,7 +23,7 @@ void Keyboard::play() {
         if (c_note == 'x') changeOctave(1);
         if (c_note == 'w') changeOctave(0);
         if (mapKeys.find(c_note)!=mapKeys.end()) {
-            note = new Note(mapKeys.find(c_note)->second, m_octave, 1);
+            note = new Note(mapKeys.find(c_note)->second, m_octave, 1, 300);
             note->display();
             note->play();
             delete note;
@@ -43,12 +31,6 @@ void Keyboard::play() {
     }
 }
 
-/* PLAY FREELY METHOD
- * interaction with the keyboard
- * tutorial/play along bonus
- * the note the user has to hit is displayed
- * and played only if he presses the right key
- */
 void Keyboard::playAlong(Recording rec) {
 
     playInstructions();
@@ -59,15 +41,15 @@ void Keyboard::playAlong(Recording rec) {
         notes[i]->display();
         char n = getch();
         if (n == 27) return;
-        while (notes[i]->getName() != mapKeys.find(n)->second) n = getch();
-        notes[i]->play();
+        if (notes[i]->getName() == 'r') notes[i]->play();
+        else {
+            while (notes[i]->getName() != mapKeys.find(n)->second) n = getch();
+            notes[i]->play();
+        }
         i++;
     }
 }
 
-/* OCTAVE CHANGING METHOD
- * in this app, only three octaves are available
- */
 void Keyboard::changeOctave(int type) {
 
     if ((type == 1) && (m_octave < 2)) m_octave++;
@@ -75,9 +57,6 @@ void Keyboard::changeOctave(int type) {
     displayOctave();
 }
 
-/* OCTAVE DISPLAYING METHOD
- * the octave is displayed so it makes it easier for the player to find what note he plays
- */
 void Keyboard::displayOctave() {
 
     center();

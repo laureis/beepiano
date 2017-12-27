@@ -1,7 +1,3 @@
-//
-// Created by L on 19/12/2017.
-//
-
 #ifndef BEEPIANO_RECORDING_H
 #define BEEPIANO_RECORDING_H
 
@@ -11,8 +7,12 @@
 
 class Recording {
 
+/* A recording is a partition
+ * it has a name, file path, and notes table
+ * and a tempo
+ */
 private:
-    std::string m_name; // Recording name is equivalent to file name
+    std::string m_name;
     std::string m_path;
     std::vector<Note*> m_notes;
     int m_tempo;
@@ -38,13 +38,13 @@ public:
     void setNotes(const std::vector<Note*>& notes);
     void setTempo(int tempo);
 
-    // convert a txt file to a a Note vector
-    std::vector<Note*> fileToVector();
+    // Converts a txt file to a Vector of notes
+    void fileToVector();
 
-    // save to file
+    // Convert a vector of notes to a txt file
     bool save();
 
-    // plays a partition
+    // Plays a partition
     void play();
 
     // displays a partition
